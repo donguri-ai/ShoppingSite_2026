@@ -30,11 +30,11 @@
       </tr>
       <tr>
         <td>名前（姓） ：</td>
-        <td><input type="text" name="firstName" maxlength="32" required></td>
+        <td><input type="text" name="lastName" maxlength="32" required></td>
       </tr>
       <tr>
         <td>名前（名） ：</td>
-        <td><input type="text" name="lastName" maxlength="32" required></td>
+        <td><input type="text" name="firstName" maxlength="32" required></td>
       </tr>
       <tr>
         <td>住所 ：</td>

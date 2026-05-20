@@ -30,11 +30,11 @@
     </tr>
     <tr>
       <td>名前（姓） ：</td>
-      <td><%= userBean.getFirstName() %></td>
+      <td><%= userBean.getLastName() %></td>
     </tr>
     <tr>
       <td>名前（名） ：</td>
-      <td><%= userBean.getLastName() %></td>
+      <td><%= userBean.getFirstName() %></td>
     </tr>
     <tr>
       <td>住所 ：</td>

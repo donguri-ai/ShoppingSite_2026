@@ -19,7 +19,7 @@
 
   <h2>メニュー</h2>
 
-  <p>ようこそ、<%= loginUser.getFirstName() %> <%= loginUser.getLastName() %> さん！</p>
+  <p>ようこそ、<%= loginUser.getLastName() %> <%= loginUser.getFirstName() %> さん！</p>
 
   <br>
 

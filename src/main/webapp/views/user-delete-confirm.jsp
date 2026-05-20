@@ -20,7 +20,7 @@
   <h2>削除してよろしいですか？</h2>
 
   <p>
-    <%= loginUser.getFirstName() %> <%= loginUser.getLastName() %> さん
+    <%= loginUser.getLastName() %> <%= loginUser.getFirstName() %> さん
   </p>
 
   <br>

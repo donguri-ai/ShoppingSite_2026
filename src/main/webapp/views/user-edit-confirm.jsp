@@ -22,11 +22,11 @@
   <table>
     <tr>
       <td>名前（姓） ：</td>
-      <td><%= updateBean.getFirstName() %></td>
+      <td><%= updateBean.getLastName() %></td>
     </tr>
     <tr>
       <td>名前（名） ：</td>
-      <td><%= updateBean.getLastName() %></td>
+      <td><%= updateBean.getFirstName() %></td>
     </tr>
     <tr>
       <td>住所 ：</td>

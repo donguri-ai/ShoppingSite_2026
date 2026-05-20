@@ -37,16 +37,16 @@
       <tr>
         <td>名前（姓） ：</td>
         <td>
-          <input type="text" name="firstName"
-                 value="<%= loginUser.getFirstName() %>"
+          <input type="text" name="lastName"
+                 value="<%= loginUser.getLastName() %>"
                  maxlength="32" required>
         </td>
       </tr>
       <tr>
         <td>名前（名） ：</td>
         <td>
-          <input type="text" name="lastName"
-                 value="<%= loginUser.getLastName() %>"
+          <input type="text" name="firstName"
+                 value="<%= loginUser.getFirstName() %>"
                  maxlength="32" required>
         </td>
       </tr>
