@@ -48,6 +48,8 @@ public class UserDao {
      * 未登録：true / 登録済み：false
      */
     public boolean userCheck(UserBean userBean) {
+    	
+    	
         String sql = "SELECT * FROM users WHERE userId = ?";
 
         try (Connection conn = DBUtil.getConnection();
