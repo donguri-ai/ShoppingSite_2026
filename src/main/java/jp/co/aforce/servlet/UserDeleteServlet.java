@@ -1,6 +1,7 @@
 package jp.co.aforce.servlet;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -38,13 +39,12 @@ public class UserDeleteServlet extends HttpServlet {
 
         // 2.0 会員情報削除のBLを呼び出す
         UserDao userDao = new UserDao();
-        boolean result = userDao.deleteUser(userBean);
+        try {
+            userDao.deleteUser(userBean);
 
-        if (!result) {
-            // 2.1 削除失敗の場合：エラーメッセージをセットしてエラー画面へ
-            request.setAttribute("errMessage", "登録エラー");
-            request.getRequestDispatcher("/views/login-error.jsp")
-                   .forward(request, response);
+        } catch (SQLException e) {
+            request.setAttribute("errMessage", "データベースエラーが発生しました：" + e.getMessage());
+            request.getRequestDispatcher("/views/login-error.jsp").forward(request, response);
             return;
         }
 

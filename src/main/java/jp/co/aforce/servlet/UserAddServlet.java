@@ -1,6 +1,7 @@
 package jp.co.aforce.servlet;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -26,26 +27,24 @@ public class UserAddServlet extends HttpServlet {
         HttpSession session = request.getSession(false);
         UserBean userBean = (UserBean) session.getAttribute("userBean");
 
-        // 1.1 既存会員チェック（二重登録防止）
         UserDao userDao = new UserDao();
-        boolean checkResult = userDao.userCheck(userBean);
+        try {
+            // 1.1 既存会員チェック（二重登録防止）
+            boolean checkResult = userDao.userCheck(userBean);
 
-        if (!checkResult) {
-            // 1.2 登録済みの場合：エラーメッセージをセットしてエラー画面へ
-            request.setAttribute("errMessage", "入力したユーザーIDとパスワードは、すでに登録済みです。");
-            request.getRequestDispatcher("/views/login-error.jsp")
-                   .forward(request, response);
-            return;
-        }
+            if (!checkResult) {
+                // 1.2 登録済みの場合：エラーメッセージをセットしてエラー画面へ
+                request.setAttribute("errMessage", "入力したユーザーIDとパスワードは、すでに登録済みです。");
+                request.getRequestDispatcher("/views/login-error.jsp").forward(request, response);
+                return;
+            }
 
-        // 1.3 未登録の場合：会員情報を登録する
-        boolean addResult = userDao.addUser(userBean);
+            // 1.3 未登録の場合：会員情報を登録する
+            userDao.addUser(userBean);
 
-        if (!addResult) {
-            // 1.3.2 登録失敗の場合：エラーメッセージをセットしてエラー画面へ
-            request.setAttribute("errMessage", "登録エラー");
-            request.getRequestDispatcher("/views/login-error.jsp")
-                   .forward(request, response);
+        } catch (SQLException e) {
+            request.setAttribute("errMessage", "データベースエラーが発生しました：" + e.getMessage());
+            request.getRequestDispatcher("/views/login-error.jsp").forward(request, response);
             return;
         }
 

@@ -1,5 +1,7 @@
 package jp.co.aforce.beans;
 
+import java.sql.Timestamp;
+
 public class UserBean {
 	
     private String userId;
@@ -8,7 +10,8 @@ public class UserBean {
     private String lastName;
     private String address;
     private String mailAddress;
-    private String createdAt;
+    private Timestamp registDate;
+    private Timestamp updateDate;
 	public String getUserId() {
 		return userId;
 	}
@@ -45,11 +48,17 @@ public class UserBean {
 	public void setMailAddress(String mailAddress) {
 		this.mailAddress = mailAddress;
 	}
-	public String getCreatedAt() {
-		return createdAt;
+	public Timestamp getRegistDate() {
+		return registDate;
 	}
-	public void setCreatedAt(String createdAt) {
-		this.createdAt = createdAt;
+	public void setRegistDate(Timestamp registDate) {
+		this.registDate = registDate;
+	}
+	public Timestamp getUpdateDate() {
+		return updateDate;
+	}
+	public void setUpdateDate(Timestamp updateDate) {
+		this.updateDate = updateDate;
 	}
     
     

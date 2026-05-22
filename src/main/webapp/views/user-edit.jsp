@@ -15,6 +15,12 @@
       response.sendRedirect(request.getContextPath() + "/views/login-in.jsp");
       return;
     }
+
+    // 確認画面から「戻る」で戻った場合は updateUserBean の値を優先して表示する
+    UserBean displayUser = (UserBean) session.getAttribute("updateUserBean");
+    if (displayUser == null) {
+      displayUser = loginUser;
+    }
   %>
 
   <h2>会員情報編集登録</h2>
@@ -38,7 +44,7 @@
         <td>名前（姓） ：</td>
         <td>
           <input type="text" name="lastName"
-                 value="<%= loginUser.getLastName() %>"
+                 value="<%= displayUser.getLastName() %>"
                  maxlength="32" required>
         </td>
       </tr>
@@ -46,7 +52,7 @@
         <td>名前（名） ：</td>
         <td>
           <input type="text" name="firstName"
-                 value="<%= loginUser.getFirstName() %>"
+                 value="<%= displayUser.getFirstName() %>"
                  maxlength="32" required>
         </td>
       </tr>
@@ -54,7 +60,7 @@
         <td>住所 ：</td>
         <td>
           <input type="text" name="address"
-                 value="<%= loginUser.getAddress() %>"
+                 value="<%= displayUser.getAddress() %>"
                  maxlength="128" required>
         </td>
       </tr>
@@ -62,7 +68,7 @@
         <td>メールアドレス ：</td>
         <td>
           <input type="email" name="mailAddress"
-                 value="<%= loginUser.getMailAddress() %>"
+                 value="<%= displayUser.getMailAddress() %>"
                  maxlength="128" required>
         </td>
       </tr>

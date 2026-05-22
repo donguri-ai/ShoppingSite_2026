@@ -1,6 +1,7 @@
 package jp.co.aforce.servlet;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -28,21 +29,24 @@ public class LoginServlet extends HttpServlet {
 
         // 1.1 DAOを呼び出してログインチェック
         UserDao userDao = new UserDao();
-        UserBean userBean = userDao.loginCheck(userId, password);
+        try {
+            UserBean userBean = userDao.loginCheck(userId, password);
 
-        if (userBean != null) {
-            // 1.2 取得成功：セッションにuserBeanをセットしてメニュー画面へ
-            HttpSession session = request.getSession();
-            session.setAttribute("userBean", userBean);
+            if (userBean != null) {
+                // 1.2 取得成功：セッションにuserBeanをセットしてメニュー画面へ
+                HttpSession session = request.getSession();
+                session.setAttribute("userBean", userBean);
+                response.sendRedirect(request.getContextPath() + "/views/user-menu.jsp");
 
-            response.sendRedirect(request.getContextPath() + "/views/user-menu.jsp");
+            } else {
+                // 1.3 取得失敗：エラーメッセージをセットしてログインエラー画面へ
+                request.setAttribute("errMessage", "ユーザーIDまたはパスワードが一致しません。");
+                request.getRequestDispatcher("/views/login-error.jsp").forward(request, response);
+            }
 
-        } else {
-            // 1.3 取得失敗：エラーメッセージをセットしてログインエラー画面へ
-            request.setAttribute("errMessage", "ユーザーIDまたはパスワードが一致しません。");
-
-            request.getRequestDispatcher("/views/login-error.jsp")
-                   .forward(request, response);
+        } catch (SQLException e) {
+            request.setAttribute("errMessage", "データベースエラーが発生しました：" + e.getMessage());
+            request.getRequestDispatcher("/views/login-error.jsp").forward(request, response);
         }
     }
 }

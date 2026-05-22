@@ -14,7 +14,7 @@ public class UserDao {
      * ログイン時にユーザーIDとパスワードの一致チェックを行う
      * 一致すればUserBeanを返す、しなければnullを返す
      */
-    public UserBean loginCheck(String userId, String password) {
+    public UserBean loginCheck(String userId, String password) throws SQLException {
         UserBean user = null;
         String sql = "SELECT * FROM users WHERE userId = ? AND password = ?";
 
@@ -33,12 +33,10 @@ public class UserDao {
                     user.setLastName(rs.getString("lastName"));
                     user.setAddress(rs.getString("address"));
                     user.setMailAddress(rs.getString("mailAddress"));
-                    user.setCreatedAt(rs.getString("created_at"));
+                    user.setRegistDate(rs.getTimestamp("registDate"));
+                    user.setUpdateDate(rs.getTimestamp("updateDate"));
                 }
             }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
         return user;
     }
@@ -47,9 +45,7 @@ public class UserDao {
      * 会員情報登録時にuserIDが登録済みかチェックする
      * 未登録：true / 登録済み：false
      */
-    public boolean userCheck(UserBean userBean) {
-    	
-    	
+    public boolean userCheck(UserBean userBean) throws SQLException {
         String sql = "SELECT * FROM users WHERE userId = ?";
 
         try (Connection conn = DBUtil.getConnection();
@@ -62,19 +58,16 @@ public class UserDao {
                     return false; // 登録済み
                 }
             }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
         return true; // 未登録
     }
 
     /**
      * 会員情報を登録する
-     * 成功：true / 失敗：false
+     * 成功：true / 失敗：SQLException をスロー
      */
-    public boolean addUser(UserBean userBean) {
-        String sql = "INSERT INTO users (userId, password, firstName, lastName, address, mailAddress) VALUES (?, ?, ?, ?, ?, ?)";
+    public boolean addUser(UserBean userBean) throws SQLException {
+        String sql = "INSERT INTO users (userId, password, firstName, lastName, address, mailAddress, registDate) VALUES (?, ?, ?, ?, ?, ?, NOW())";
 
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -88,19 +81,15 @@ public class UserDao {
 
             pstmt.executeUpdate();
             return true;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
-        return false;
     }
 
     /**
      * 会員情報を更新する
-     * 成功：true / 失敗：false
+     * 成功：true / 失敗：SQLException をスロー
      */
-    public boolean updateUser(UserBean userBean) {
-        String sql = "UPDATE users SET password = ?, firstName = ?, lastName = ?, address = ?, mailAddress = ? WHERE userId = ?";
+    public boolean updateUser(UserBean userBean) throws SQLException {
+        String sql = "UPDATE users SET password = ?, firstName = ?, lastName = ?, address = ?, mailAddress = ?, updateDate = NOW() WHERE userId = ?";
 
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -114,18 +103,14 @@ public class UserDao {
 
             pstmt.executeUpdate();
             return true;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
-        return false;
     }
 
     /**
      * 会員情報を削除する
-     * 成功：true / 失敗：false
+     * 成功：true / 失敗：SQLException をスロー
      */
-    public boolean deleteUser(UserBean userBean) {
+    public boolean deleteUser(UserBean userBean) throws SQLException {
         String sql = "DELETE FROM users WHERE userId = ?";
 
         try (Connection conn = DBUtil.getConnection();
@@ -134,19 +119,6 @@ public class UserDao {
             pstmt.setString(1, userBean.getUserId());
             pstmt.executeUpdate();
             return true;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
-        return false;
     }
-    
-    
-    
-
-    
-    
-    
-    
-    
 }

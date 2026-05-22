@@ -1,6 +1,7 @@
 package jp.co.aforce.servlet;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -33,21 +34,26 @@ public class UserAddConfirmServlet extends HttpServlet {
 
         // 1.2 既存会員チェック
         UserDao userDao = new UserDao();
-        boolean result = userDao.userCheck(userBean);
+        try {
+            boolean result = userDao.userCheck(userBean);
 
-        if (result) {
-            // 1.3 未登録の場合：セッションにuserBeanをセットして確認画面へ
-            HttpSession session = request.getSession();
-            session.setAttribute("userBean", userBean);
+            if (result) {
+                // 1.3 未登録の場合：セッションにuserBeanをセットして確認画面へ
+                HttpSession session = request.getSession();
+                session.setAttribute("userBean", userBean);
+                response.sendRedirect(request.getContextPath() + "/views/user-add-confirm.jsp");
 
-            response.sendRedirect(request.getContextPath() + "/views/user-add-confirm.jsp");
+            } else {
+                // 1.4 登録済みの場合：エラーメッセージと入力値をセットして登録画面へ戻る
+                request.setAttribute("errMessage", "入力したユーザーIDとパスワードは、すでに登録済みです。");
+                request.setAttribute("inputBean", userBean);
+                request.getRequestDispatcher("/views/user-add.jsp").forward(request, response);
+            }
 
-        } else {
-            // 1.4 登録済みの場合：エラーメッセージをセットして登録画面へ戻る
-            request.setAttribute("errMessage", "入力したユーザーIDとパスワードは、すでに登録済みです。");
-
-            request.getRequestDispatcher("/views/user-add.jsp")
-                   .forward(request, response);
+        } catch (SQLException e) {
+            request.setAttribute("errMessage", "データベースエラーが発生しました：" + e.getMessage());
+            request.setAttribute("inputBean", userBean);
+            request.getRequestDispatcher("/views/user-add.jsp").forward(request, response);
         }
     }
 }
